@@ -1,9 +1,38 @@
-
-
+#include <stdint.h>
+#include <stdbool.h>
+#include "tm4c123gh6pm.h"
 /**
  * main.c
  */
 int main(void)
 {
-	return 0;
+    SYSCTL_RCGC2_R |=   0x00000020;      // ENABLE CLOCK TO GPIOF
+    GPIO_PORTF_LOCK_R = 0x4C4F434B;      // UNLOCK COMMIT REGISTER
+    GPIO_PORTF_CR_R   = 0x1F;            // MAKE PORTF0 CONFIGURABLE
+    GPIO_PORTF_DEN_R  = 0x1F;            // SET PORTF PINS 4 PIN
+    GPIO_PORTF_DIR_R  = 0x0E;            // SET PORTF4 PIN AS INPUT USER SWITCH PIN
+    GPIO_PORTF_PUR_R  = 0x11;            // PORTF4 IS PULLED UP
+
+    GPIO_PORTF_DATA_R = 0x0;             // LED OFF
+    while(1)
+    {
+        int curr = GPIO_PORTF_DATA_R;
+        int red = curr & 0x10;
+        int blue = curr & 0x01;
+
+        if(!red && !blue){
+            GPIO_PORTF_DATA_R = 0x6;
+        }
+        else if (!blue){
+            GPIO_PORTF_DATA_R = 0x4;
+        }
+        else if (!red){
+            GPIO_PORTF_DATA_R = 0x2;
+        }
+        else{
+            GPIO_PORTF_DATA_R = 0x0;
+        }
+
+
+    }
 }
