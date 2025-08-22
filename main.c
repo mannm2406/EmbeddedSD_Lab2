@@ -32,7 +32,5 @@ int main(void)
         else{
             GPIO_PORTF_DATA_R = 0x0;
         }
-
-
     }
 }
