@@ -33,8 +33,6 @@ int main(void)
             prev = 16;
         }
 
-
-
-
     }
+    return 0;
 }
