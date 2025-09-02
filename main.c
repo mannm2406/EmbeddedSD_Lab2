@@ -4,6 +4,14 @@
 /**
  * main.c
  */
+
+#define RED 0x2
+#define BLUE 0x4
+#define GREEN 0x8
+#define PURPLE 0x6
+
+#define SW1 0x10
+#define SW2 0x01
 int main(void)
 {
     SYSCTL_RCGC2_R |=   0x00000020;      // ENABLE CLOCK TO GPIOF
@@ -17,17 +25,17 @@ int main(void)
     while(1)
     {
         int curr = GPIO_PORTF_DATA_R;
-        int red = curr & 0x10;
-        int blue = curr & 0x01;
+        int red = curr & SW1;
+        int blue = curr & SW2;
 
         if(!red && !blue){
-            GPIO_PORTF_DATA_R = 0x6;
+            GPIO_PORTF_DATA_R = PURPLE;
         }
         else if (!blue){
-            GPIO_PORTF_DATA_R = 0x4;
+            GPIO_PORTF_DATA_R = BLUE;
         }
         else if (!red){
-            GPIO_PORTF_DATA_R = 0x2;
+            GPIO_PORTF_DATA_R = RED;
         }
         else{
             GPIO_PORTF_DATA_R = 0x0;
