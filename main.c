@@ -5,6 +5,14 @@
 /**
  * main.c
  */
+
+#define RED 0x2
+#define BLUE 0x4
+#define GREEN 0x8
+#define OFF 0x0
+#define WHITE 0xE
+
+#define SWITCH 0x10
 int main(void)
 {
     SYSCTL_RCGC2_R |=   0x00000020;      // ENABLE CLOCK TO GPIOF
@@ -15,13 +23,13 @@ int main(void)
     GPIO_PORTF_PUR_R  = 0x10;            // PORTF4 IS PULLED UP
 
     GPIO_PORTF_DATA_R = 0x0;             // LED OFF
-    int colours[] = {0x0, 0x2, 0x6, 0x4, 0xC, 0x8, 0xA, 0xE};
+    int colours[] = {OFF, RED, RED + BLUE, BLUE, BLUE + GREEN, GREEN, GREEN + RED, WHITE};
     int state = 0;
-    int prev = GPIO_PORTF_DATA_R & 0x10;
-    int curr = GPIO_PORTF_DATA_R & 0x10;
+    int prev = GPIO_PORTF_DATA_R & SWITCH;
+    int curr = GPIO_PORTF_DATA_R & SWITCH;
     while(1)
     {
-        curr = GPIO_PORTF_DATA_R & 0x10;
+        curr = GPIO_PORTF_DATA_R & SWITCH;
 
         if (prev && !curr){
             state++;
@@ -30,7 +38,7 @@ int main(void)
             GPIO_PORTF_DATA_R = colours[state];
         }
         if (!prev && curr){
-            prev = 16;
+            prev = SWITCH;
         }
 
     }
